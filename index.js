@@ -1,11 +1,19 @@
-function generate(numRows) {
-  const triangle = [];
-  for (let i = 0; i < numRows; i++) {
-    const row = new Array(i + 1).fill(1);
-    for (let j = 1; j < row.length - 1; j++) {
-      row[j] = triangle[i - 1][j - 1] + triangle[i - 1][j];
+function getHint(secret, guess) {
+  let bulls = 0;
+  let cows = 0;
+  const map = new Map();
+  for (let i = 0; i < secret.length; i++) {
+    if (secret[i] === guess[i]) {
+      bulls++;
+    } else {
+      map.set(secret[i], (map.get(secret[i]) || 0) + 1);
     }
-    triangle.push(row);
   }
-  return triangle;
+  for (let i = 0; i < guess.length; i++) {
+    if (secret[i] !== guess[i] && map.has(guess[i]) && map.get(guess[i]) > 0) {
+      cows++;
+      map.set(guess[i], map.get(guess[i]) - 1);
+    }
+  }
+  return `${bulls}A${cows}B`;
 }
