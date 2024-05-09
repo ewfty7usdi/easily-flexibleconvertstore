@@ -1,19 +1,13 @@
-function getHint(secret, guess) {
-  let bulls = 0;
-  let cows = 0;
+function canCross(stones) {
   const map = new Map();
-  for (let i = 0; i < secret.length; i++) {
-    if (secret[i] === guess[i]) {
-      bulls++;
-    } else {
-      map.set(secret[i], (map.get(secret[i]) || 0) + 1);
+  for (const stone of stones) map.set(stone, new Set());
+  map.get(0).add(0);
+  for (let i = 0; i < stones.length; i++) {
+    for (const step of map.get(stones[i])) {
+      for (let k = step - 1; k <= step + 1; k++) {
+        if (k > 0 && map.has(stones[i] + k)) map.get(stones[i] + k).add(k);
+      }
     }
   }
-  for (let i = 0; i < guess.length; i++) {
-    if (secret[i] !== guess[i] && map.has(guess[i]) && map.get(guess[i]) > 0) {
-      cows++;
-      map.set(guess[i], map.get(guess[i]) - 1);
-    }
-  }
-  return `${bulls}A${cows}B`;
+  return map.get(stones[stones.length - 1]).size > 0;
 }
