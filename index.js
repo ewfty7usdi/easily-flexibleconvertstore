@@ -1,14 +1,12 @@
-function maxArea(height) {
-  let maxArea = 0;
-  let left = 0;
-  let right = height.length - 1;
-  while (left < right) {
-    maxArea = Math.max(
-      maxArea,
-      Math.min(height[left], height[right]) * (right - left),
-    );
-    if (height[left] < height[right]) left++;
-    else right--;
+function combinationSum4(nums, target) {
+  const dp = new Array(target + 1).fill(0);
+  dp[0] = 1;
+  for (let i = 1; i <= target; i++) {
+    for (const num of nums) {
+      if (i >= num) {
+        dp[i] += dp[i - num];
+      }
+    }
   }
-  return maxArea;
+  return dp[target];
 }
